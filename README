@@ -27,6 +27,8 @@ will give you:
   Accept: application/json,text/html
   #=> 200 OK
 
+see examples/simple.ru for example code.
+
 ===== Tip
 
 To read the requested type from the url's extension instead of the Accept
@@ -41,7 +43,7 @@ Rack::SupportedMediaTypes.
   use Rack::SupportedMediaTypes, %w( application/xml application/json )
   run App.new
 
-Which will allow:
+will result in:
 
   GET /foo.html
   #=> 415 Unsupported Media Type
@@ -54,3 +56,5 @@ Which will allow:
 
 (Rack::AbstractFormat prepends the media type for the url's extension to the
 Accept header)
+
+see examples/recommended.ru for example code.
