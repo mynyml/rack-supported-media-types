@@ -5,7 +5,7 @@ module Rack
       @app, @mime_types = app, mime_types
     end
 
-    # --
+    #--
     # return any headers with 415?
     def call(env)
       @mime_types.include?(accept(env)) ?

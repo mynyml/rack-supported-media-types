@@ -1,0 +1,24 @@
+===== Summary
+
+Rack middleware to specify an app's supported media types.
+Returns '415 Unsuported Media Type' status when unsuported type is requested.
+
+The requested type is assumed to be the first content-type in the Accept header's list.
+
+===== Examples
+
+  require 'rack'
+  require 'rack/supported_media_types'
+
+  use Rack::SupportedMediaTypes, %w( application/xml application/json )
+  run App.new
+
+will give you:
+
+  GET /foo
+  Accept: text/html,text/plain
+  #=> 415 Unsupported Media Type
+
+  GET /foo
+  Accept: application/xml,text/html
+  #=> 200 OK
