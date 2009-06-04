@@ -1,49 +1,58 @@
 require 'test/test_helper'
 
-InnerApp = Rack::Builder.new {
-  use Rack::Lint
-  run lambda {|env| [200, {'Content-Type' => 'text/html'}, ['content']] }
-}.to_app
+App = lambda {|env| [200, {'Content-Type' => 'text/html'}, ['content']] }
+SMT = Rack::SupportedMediaTypes
 
-class SupportedMediaTypeTest < Test::Unit::TestCase
+class SupportedMediaTypesTest < Test::Unit::TestCase
 
   test "returns 415 Unsuported Media Type" do
-    app = Rack::Builder.new {
-      use Rack::SupportedMediaTypes, %w( application/xml text/html )
-      run InnerApp
-    }.to_app
+    app = SMT.new(App, %w( application/xml application/json ))
 
-    client = Rack::MockRequest.new(app)
-    response = client.get('/', 'request.format' => '.txt')
-
+    response = Rack::MockRequest.new(app).get('/', 'HTTP_ACCEPT' => 'text/html')
     assert_equal 415, response.status
     assert response.body.empty?
   end
 
   test "lets request through when media type is supported" do
-    app = Rack::Builder.new {
-      use Rack::SupportedMediaTypes, %w( text/plain application/xml )
-      run InnerApp
-    }.to_app
+    app = SMT.new(App, %w( text/html application/xml ))
 
-    client = Rack::MockRequest.new(app)
-    response = client.get('/', 'request.format' => '.txt')
-
+    response = Rack::MockRequest.new(app).get('/', 'HTTP_ACCEPT' => 'text/html')
     assert_equal 200, response.status
   end
 
-  test "normalizes request format" do
-    app = Rack::Builder.new {
-      use Rack::SupportedMediaTypes, %w( text/html )
-      run InnerApp
-    }.to_app
-
+  test "requested type is assumed to be first type in Accept header's list" do
+    app = SMT.new(App, %w( text/html ))
     client = Rack::MockRequest.new(app)
 
-    response = client.get('/', 'request.format' => 'html')
+    response = client.get('/', 'HTTP_ACCEPT' => 'text/html,application/xml')
     assert_equal 200, response.status
 
-    response = client.get('/', 'request.format' => 'text/html')
+    response = client.get('/', 'HTTP_ACCEPT' => 'application/xml,text/html')
+    assert_equal 415, response.status
+  end
+
+  test "ignores content-type params" do
+    app = SMT.new(App, %w( application/xml application/json ))
+
+    response = Rack::MockRequest.new(app).get('/', 'HTTP_ACCEPT' => 'application/xml;q=0.9')
     assert_equal 200, response.status
+  end
+
+  test "nil Accept header" do
+    app = SMT.new(App, %w( application/xml application/json ))
+
+    assert_nothing_raised do
+      response = Rack::MockRequest.new(app).get('/', 'HTTP_ACCEPT' => nil)
+      assert_equal 415, response.status
+    end
+  end
+
+  test "empty Accept header" do
+    app = SMT.new(App, %w( application/xml application/json ))
+
+    assert_nothing_raised do
+      response = Rack::MockRequest.new(app).get('/', 'HTTP_ACCEPT' => '')
+      assert_equal 415, response.status
+    end
   end
 end

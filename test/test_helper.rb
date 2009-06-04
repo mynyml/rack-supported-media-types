@@ -2,9 +2,9 @@ require 'pathname'
 require 'test/unit'
 require 'rubygems'
 require 'rack'
-require 'phocus/test_unit'
 begin
   require 'ruby-debug'
+  require 'phocus/test_unit'
 rescue LoadError, RuntimeError
 end
 
