@@ -5,7 +5,7 @@ Returns '415 Unsuported Media Type' status when unsuported type is requested.
 
 The requested type is assumed to be the first content-type in the Accept header's list.
 
-===== Examples
+===== Example
 
   require 'rack'
   require 'rack/supported_media_types'
@@ -22,3 +22,35 @@ will give you:
   GET /foo
   Accept: application/xml,text/html
   #=> 200 OK
+
+  GET /foo
+  Accept: application/json,text/html
+  #=> 200 OK
+
+===== Tip
+
+To read the requested type from the url's extension instead of the Accept
+header (which is a more realistic use case), use Rack::AbstractFormat before
+Rack::SupportedMediaTypes.
+
+  require 'rack'
+  require 'rack/abstract_format'
+  require 'rack/supported_media_types'
+
+  use Rack::AbstractFormat
+  use Rack::SupportedMediaTypes, %w( application/xml application/json )
+  run App.new
+
+Which will allow:
+
+  GET /foo.html
+  #=> 415 Unsupported Media Type
+
+  GET /foo.xml
+  #=> 200 OK
+
+  GET /foo.json
+  #=> 200 OK
+
+(Rack::AbstractFormat prepends the media type for the url's extension to the
+Accept header)
