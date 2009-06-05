@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: rack-supported-media-types
 version: !ruby/object:Gem::Version 
-  version: "0.9"
+  version: 0.9.2
 platform: ruby
 authors: 
 - Martin Aumont
