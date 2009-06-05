@@ -1,7 +1,7 @@
 ===== Summary
 
 Rack middleware to specify an app's supported media types.
-Returns '415 Unsuported Media Type' status when unsuported type is requested.
+Returns '406 Not Acceptable' status when unsuported type is requested.
 
 The requested type is assumed to be the first content-type in the Accept header's list.
 
@@ -17,7 +17,7 @@ will give you:
 
   GET /foo
   Accept: text/html,text/plain
-  #=> 415 Unsupported Media Type
+  #=> 406 Not Acceptable
 
   GET /foo
   Accept: application/xml,text/html
@@ -46,7 +46,7 @@ Rack::SupportedMediaTypes.
 will result in:
 
   GET /foo.html
-  #=> 415 Unsupported Media Type
+  #=> 406 Not Acceptable
 
   GET /foo.xml
   #=> 200 OK
@@ -58,3 +58,8 @@ will result in:
 Accept header)
 
 see examples/recommended.ru for example code.
+
+===== Links
+
+source:: http://github.com/mynyml/rack-supported-media-types
+rdocs::  http://docs.github.com/mynyml/rack-supported-media-types

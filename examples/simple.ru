@@ -17,7 +17,7 @@ require root + 'lib/rack/supported_media_types'
 
 class App
   def call(env)
-    [200, {'Content-Type' => 'text/html'}, ['now try <strong>/foo</strong> (will return 415)']]
+    [200, {'Content-Type' => 'text/html'}, ['now try <strong>/foo</strong> (will return 406)']]
   end
 end
 
@@ -31,7 +31,7 @@ map '/' do
 end
 
 map '/foo' do
-  # ... this will abort the request and return 415 Unsupported Media Type
+  # ... this will abort the request and return 406 Not Acceptable
   use Rack::SupportedMediaTypes, %w( application/xml application/json )
   run App.new
 end

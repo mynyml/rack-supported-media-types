@@ -5,11 +5,11 @@ SMT = Rack::SupportedMediaTypes
 
 class SupportedMediaTypesTest < Test::Unit::TestCase
 
-  test "returns 415 Unsuported Media Type" do
+  test "returns 406 Not Acceptable" do
     app = SMT.new(App, %w( application/xml application/json ))
 
     response = Rack::MockRequest.new(app).get('/', 'HTTP_ACCEPT' => 'text/html')
-    assert_equal 415, response.status
+    assert_equal 406, response.status
     assert response.body.empty?
   end
 
@@ -28,7 +28,7 @@ class SupportedMediaTypesTest < Test::Unit::TestCase
     assert_equal 200, response.status
 
     response = client.get('/', 'HTTP_ACCEPT' => 'application/xml,text/html')
-    assert_equal 415, response.status
+    assert_equal 406, response.status
   end
 
   test "ignores content-type params" do
@@ -38,12 +38,12 @@ class SupportedMediaTypesTest < Test::Unit::TestCase
     assert_equal 200, response.status
   end
 
-  test "nil Accept header" do
+  test "nil Accept header means all types accepted" do
     app = SMT.new(App, %w( application/xml application/json ))
 
     assert_nothing_raised do
       response = Rack::MockRequest.new(app).get('/', 'HTTP_ACCEPT' => nil)
-      assert_equal 415, response.status
+      assert_equal 200, response.status
     end
   end
 
@@ -52,7 +52,7 @@ class SupportedMediaTypesTest < Test::Unit::TestCase
 
     assert_nothing_raised do
       response = Rack::MockRequest.new(app).get('/', 'HTTP_ACCEPT' => '')
-      assert_equal 415, response.status
+      assert_equal 406, response.status
     end
   end
 end

@@ -21,7 +21,7 @@ try using extensions:
   - /foo.txt
   - ...
 
-app will only accept .html and .xml requests. others will return 415
+app will only accept .html and .xml requests. others will return 406
 (check server's output in console to see it)
 </pre>
     BODY
