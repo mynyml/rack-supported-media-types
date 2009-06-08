@@ -1,36 +1,37 @@
+gem 'rack-accept-media-types', '>= 0.6'
+require 'rack/accept_media_types'
+
 module Rack
   class SupportedMediaTypes
 
-    #--
-    # NOTE
-    # Ths reason for adding nil to the list of accepted mime types:
-    #
-    #   "If no Accept header field is present, then it is assumed that the client accepts all media types"
-    #    http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
-    #
-    # Counter intuitive?
-    #
     def initialize(app, mime_types)
-      @app, @mime_types = app, mime_types.push(nil)
+      @app, @mime_types = app, mime_types
     end
 
     #--
     # return any headers with 406?
     def call(env)
-      @mime_types.include?(accept(env)) ?
+      req_type = accept(env)
+      !req_type.empty? && @mime_types.any? {|type| type.match(/#{req_type}/) } ?
         @app.call(env) :
         Rack::Response.new([], 406).finish
     end
 
     private
       #--
-      # First content-type in Accept header's list, without params
+      # Client's prefered media type.
+      #
+      # NOTE
+      # glob patterns are replaced with regexp.
+      #
+      #   */*     ->  .*/.*
+      #   text/*  ->  text/.*
+      #
+      # NOTE
+      # Rack::AcceptMediaTypes.prefered is */* if Accept header is nil
+      #
       def accept(env)
-        header = env['HTTP_ACCEPT']
-
-        (header.nil? || header.empty?) ?
-          header :
-          header.split(',').first.split(';').first
+        Rack::AcceptMediaTypes.new(env['HTTP_ACCEPT']).prefered.to_s.gsub(/\*/, '.*')
       end
   end
 end

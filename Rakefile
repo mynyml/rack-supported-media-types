@@ -31,6 +31,8 @@ spec = Gem::Specification.new do |s|
   s.has_rdoc        = true
   s.require_path    = "lib"
   s.files           = all_except([/doc/, /pkg/])
+
+  s.add_dependency 'mynyml-rack-accept-media-types', '>= 0.6'
 end
 
 desc "Generate rdoc documentation."
