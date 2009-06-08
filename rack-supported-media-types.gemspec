@@ -1,7 +1,7 @@
 --- !ruby/object:Gem::Specification 
 name: rack-supported-media-types
 version: !ruby/object:Gem::Version 
-  version: 0.9.2
+  version: 0.9.3
 platform: ruby
 authors: 
 - Martin Aumont
@@ -9,10 +9,19 @@ autorequire:
 bindir: bin
 cert_chain: []
 
-date: 2009-06-05 00:00:00 -04:00
+date: 2009-06-08 00:00:00 -04:00
 default_executable: 
-dependencies: []
-
+dependencies: 
+- !ruby/object:Gem::Dependency 
+  name: mynyml-rack-accept-media-types
+  type: :runtime
+  version_requirement: 
+  version_requirements: !ruby/object:Gem::Requirement 
+    requirements: 
+    - - ">="
+      - !ruby/object:Gem::Version 
+        version: "0.6"
+    version: 
 description: Rack middleware to specify an app's supported media types. Returns '406 Not Acceptable' status when unsuported type is requested.
 email: mynyml@gmail.com
 executables: []

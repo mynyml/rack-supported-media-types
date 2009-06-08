@@ -22,7 +22,7 @@ end
 
 spec = Gem::Specification.new do |s|
   s.name            = 'rack-supported-media-types'
-  s.version         = '0.9.2'
+  s.version         = '0.9.3'
   s.summary         = "Rack middleware to specify an app's supported media types."
   s.description     = "Rack middleware to specify an app's supported media types. Returns '406 Not Acceptable' status when unsuported type is requested."
   s.author          = "Martin Aumont"
