@@ -5,6 +5,10 @@ Returns '406 Not Acceptable' status when unsuported type is requested.
 
 The requested type is assumed to be the first content-type in the Accept header's list.
 
+===== Install
+
+  gem install mynyml-rack-supported-media-types --source=http://gems.github.com/
+
 ===== Example
 
   require 'rack'
@@ -34,6 +38,8 @@ see examples/simple.ru for example code.
 To read the requested type from the url's extension instead of the Accept
 header (which is a more realistic use case), use Rack::AbstractFormat before
 Rack::SupportedMediaTypes.
+
+  # gem install mynyml-rack-abstract-format --source=http://gems.github.com/
 
   require 'rack'
   require 'rack/abstract_format'

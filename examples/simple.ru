@@ -21,8 +21,8 @@ class App
   end
 end
 
-# given that the request comes from a webbrowser, and that it's Accept header's
-# first value is text/html...
+# given that the request comes from a web browser, and that it's Accept
+# header's highest value is text/html...
 
 map '/' do
   # ... this will allow it through to the app
