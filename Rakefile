@@ -9,7 +9,7 @@ task(:default => :test)
 
 desc "Run tests"
 task(:test) do
-  system "ruby #{gem_opt} test/test_supported_media_types.rb"
+  exit system("ruby #{gem_opt} test/test_supported_media_types.rb")
 end
 
 # --------------------------------------------------
