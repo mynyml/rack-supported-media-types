@@ -1,68 +1,26 @@
+def gem_opt
+  defined?(Gem) ? "-rubygems" : ""
+end
+
 # --------------------------------------------------
-# based on thin's Rakefile (http://github.com/macournoyer/thin)
+# Tests
 # --------------------------------------------------
-require 'rake/gempackagetask'
-require 'rake/rdoctask'
-require 'pathname'
-require 'yaml'
+task(:default => :test)
 
-RUBY_1_9  = RUBY_VERSION =~ /^1\.9/
-WIN       = (RUBY_PLATFORM =~ /mswin|cygwin/)
-SUDO      = (WIN ? "" : "sudo")
-
-def gem
-  RUBY_1_9 ? 'gem19' : 'gem'
+desc "Run tests"
+task(:test) do
+  system "ruby #{gem_opt} test/test_supported_media_types.rb"
 end
 
-def all_except(res)
-  Dir['**/*'].reject do |path|
-    Array(res).any? {|re| path.match(re) }
-  end
+# --------------------------------------------------
+# Docs
+# --------------------------------------------------
+desc "Generate YARD Documentation"
+task(:yardoc) do
+  require 'yard'
+  files   = %w( lib/**/*.rb )
+  options = %w( -o doc/yard --readme README --files LICENSE )
+  YARD::CLI::Yardoc.run *(options + files)
 end
 
-spec = Gem::Specification.new do |s|
-  s.name            = 'rack-supported-media-types'
-  s.version         = '0.9.3'
-  s.summary         = "Rack middleware to specify an app's supported media types."
-  s.description     = "Rack middleware to specify an app's supported media types. Returns '406 Not Acceptable' status when unsuported type is requested."
-  s.author          = "Martin Aumont"
-  s.email           = 'mynyml@gmail.com'
-  s.homepage        = ''
-  s.has_rdoc        = true
-  s.require_path    = "lib"
-  s.files           = all_except([/doc/, /pkg/])
 
-  s.add_dependency 'mynyml-rack-accept-media-types', '>= 0.6'
-end
-
-desc "Generate rdoc documentation."
-Rake::RDocTask.new("rdoc") { |rdoc|
-  rdoc.rdoc_dir = 'doc/rdoc'
-  rdoc.title    = "Rack::SupportedMediaTypes"
-  rdoc.options << '--line-numbers' << '--inline-source'
-  rdoc.options << '--charset' << 'utf-8'
-  rdoc.rdoc_files.include('README')
-  rdoc.rdoc_files.include('lib/**/*.rb')
-}
-
-Rake::GemPackageTask.new(spec) do |p|
-  p.gem_spec = spec
-end
-
-desc "Remove package products"
-task :clean => :clobber_package
-
-desc "Update the gemspec for GitHub's gem server"
-task :gemspec do
-  Pathname("#{spec.name}.gemspec").open('w') {|f| f << YAML.dump(spec) }
-end
-
-desc "Install gem"
-task :install => [:clobber, :package] do
-  sh "#{SUDO} #{gem} install pkg/#{spec.full_name}.gem"
-end
-
-desc "Uninstall gem"
-task :uninstall => :clean do
-  sh "#{SUDO} #{gem} uninstall -v #{spec.version} -x #{spec.name}"
-end
