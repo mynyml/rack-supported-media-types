@@ -1,4 +1,3 @@
-gem 'rack-accept-media-types', '>= 0.6'
 require 'rack/accept_media_types'
 
 module Rack
