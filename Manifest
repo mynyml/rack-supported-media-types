@@ -1,0 +1,11 @@
+.gitignore
+LICENSE
+Manifest
+README
+Rakefile
+examples/recommended.ru
+examples/simple.ru
+lib/rack/supported_media_types.rb
+rack-supported-media-types.gemspec
+test/test_helper.rb
+test/test_supported_media_types.rb
