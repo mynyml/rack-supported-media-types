@@ -3,11 +3,9 @@
 Rack middleware to specify an app's supported media types.
 Returns '406 Not Acceptable' status when unsuported type is requested.
 
-The requested type is assumed to be the first content-type in the Accept header's list.
-
 ===== Install
 
-  gem install mynyml-rack-supported-media-types --source=http://gems.github.com/
+  gem install rack-supported-media-types
 
 ===== Example
 
@@ -17,7 +15,7 @@ The requested type is assumed to be the first content-type in the Accept header'
   use Rack::SupportedMediaTypes, %w( application/xml application/json )
   run App.new
 
-will give you:
+  # will give you:
 
   GET /foo
   Accept: text/html,text/plain
@@ -39,7 +37,7 @@ To read the requested type from the url's extension instead of the Accept
 header (which is a more realistic use case), use Rack::AbstractFormat before
 Rack::SupportedMediaTypes.
 
-  # gem install mynyml-rack-abstract-format --source=http://gems.github.com/
+  # gem install rack-abstract-format
 
   require 'rack'
   require 'rack/abstract_format'
@@ -49,7 +47,7 @@ Rack::SupportedMediaTypes.
   use Rack::SupportedMediaTypes, %w( application/xml application/json )
   run App.new
 
-will result in:
+  # will result in:
 
   GET /foo.html
   #=> 406 Not Acceptable
@@ -60,12 +58,10 @@ will result in:
   GET /foo.json
   #=> 200 OK
 
-(Rack::AbstractFormat prepends the media type for the url's extension to the
-Accept header)
-
 see examples/recommended.ru for example code.
 
 ===== Links
 
-source:: http://github.com/mynyml/rack-supported-media-types
-rdocs::  http://docs.github.com/mynyml/rack-supported-media-types
+code:: http://github.com/mynyml/rack-supported-media-types
+docs:: http://docs.github.com/mynyml/rack-supported-media-types
+
