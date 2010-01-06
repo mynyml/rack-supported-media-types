@@ -1,19 +1,18 @@
 # run me with:
-#   $rackup examples/simple.ru -p 3000
+#   $ rackup examples/simple.ru -p 3000
 #
 # then point your browser to:
 #   localhost:3000/
 #   localhost:3000/foo
 #
-# and look for the server's output in the console (pay attention to status
-# codes)
+# and look for the server's output in the console
+# (pay attention to status codes)
 #
 require 'pathname'
-require 'rubygems'
 require 'rack'
 
-root = Pathname(__FILE__).dirname.parent.expand_path
-require root + 'lib/rack/supported_media_types'
+$:.unshift(Pathname(__FILE__).dirname.parent + 'lib')
+require 'rack/supported_media_types'
 
 class App
   def call(env)
@@ -32,6 +31,6 @@ end
 
 map '/foo' do
   # ... this will abort the request and return 406 Not Acceptable
-  use Rack::SupportedMediaTypes, %w( application/xml application/json )
+  use Rack::SupportedMediaTypes, %w( application/json )
   run App.new
 end
