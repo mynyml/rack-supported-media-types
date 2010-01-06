@@ -1,16 +1,18 @@
-# run me with:
-#   $rackup examples/recommended.ru -p 3000
+# install required dependency:
+#   $ gem install rack-abstract-format
+#
+# run with:
+#   $ rackup examples/recommended.ru -p 3000
 #
 # and point your web browser to:
 #   localhost:3000/foo.html
 #
 require 'pathname'
-require 'rubygems'
 require 'rack'
-require 'rack/abstract_format' #gem install mynyml-rack-abstract-format --source=http://gems.github.com/
+require 'rack/abstract_format'
 
-root = Pathname(__FILE__).dirname.parent.expand_path
-require root + 'lib/rack/supported_media_types'
+$:.unshift(Pathname(__FILE__).dirname.parent + 'lib')
+require 'rack/supported_media_types'
 
 class App
   def call(env)
@@ -35,3 +37,4 @@ end
 use Rack::AbstractFormat
 use Rack::SupportedMediaTypes, %w( text/html application/xml )
 run App.new
+
